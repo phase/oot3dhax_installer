@@ -14,13 +14,14 @@ I can't support this, but there are a few quick pointers:
 * Check that you have a working internet connection, since the installer downloads the payload from smea.
 * If all else fails, try wiping the OoT3D save data. Again, the installer won't do this for you.
 
-The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA O3DS 9.9 and JPN N3DS 9.9. <a href="https://gbatemp.net/threads/quick-and-dirty-oot3d-port-of-ironhax-installer.396312/#post-5647053">I have a report of the install working on a EUR 9.9 N3DS.</a> No older FW versions over here to test with, I'm afraid.
+The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA O3DS 9.9 and JPN N3DS 9.9. <a href="https://gbatemp.net/threads/quick-and-dirty-oot3d-port-of-ironhax-installer.396312/#post-5647053">I have a report of the install working on a EUR 9.9 N3DS.</a> No older FW versions over here to test with, I'm afraid. eShop versus gamecard should be irrelevant, as long as you can select OoT3D as the target app when launching the installer.
 
 ## Quick overview
 We already have all the pieces in place:
 * smea's sploit_installer, which downloads ninjhax2 otherapp payloads
 * smea's oot3dhax fork from yellows8, which works
-So it's just a matter of making it use OoT3D saves instead of ironhax saves.
+
+So it's just a matter of making it use OoT3D saves instead of ironhax saves. If you wanted to use regionFOUR or ninjhax1 payloads and fetch them either from a different URL or from the SD card, there's nothing stopping you as long as those payloads support otherapp (which the ironhax payloads do, since they're built for apps that aren't Cubic Ninja).
 
 One optional item we would like:
 * a quick modification that should let us load payload from SD card, not gamecard
