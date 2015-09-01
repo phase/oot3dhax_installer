@@ -5,7 +5,7 @@
 #include <3ds.h>
 
 #include "filesystem.h"
-#include "blz.h"
+// #include "blz.h"
 #include "firmware.h"
 #include "savegame_data.h"
 
@@ -60,6 +60,34 @@ Result write_savedata(char* path, u8* data, u32 size)
 
 	return ret;
 }
+
+Result write_payload(char* path, u8* data, u32 size)
+{
+	if(!path || !data || !size)return -1;
+
+	Handle outFileHandle;
+	u32 bytesWritten;
+	Result ret = 0;
+	int fail = 0;
+
+	ret = FSUSER_OpenFile(&sdmcFsHandle, &outFileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_CREATE | FS_OPEN_WRITE, FS_ATTRIBUTE_NONE);
+	if(ret){fail = -8; goto writeFail;}
+
+	ret = FSFILE_Write(outFileHandle, &bytesWritten, 0x0, data, size, 0x10001);
+	if(ret){fail = -9; goto writeFail;}
+
+	ret = FSFILE_Close(outFileHandle);
+	if(ret){fail = -10; goto writeFail;}
+
+	ret = FSUSER_ControlArchive(sdmcFsHandle, sdmcArchive);
+
+	writeFail:
+	if(fail)sprintf(status, "failed to write to file : %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
+	else sprintf(status, "successfully wrote to file !\n     %08X               ", (unsigned int)bytesWritten);
+
+	return ret;
+}
+
 
 typedef enum
 {
@@ -274,7 +302,7 @@ int main()
 				}
 				break;
 			case STATE_COMPRESS_PAYLOAD:
-				payload_buf = BLZ_Code(payload_buf, payload_size, (unsigned int*)&payload_size, BLZ_NORMAL);
+				//payload_buf = BLZ_Code(payload_buf, payload_size, (unsigned int*)&payload_size, BLZ_NORMAL);
 				next_state = STATE_INSTALL_PAYLOAD;
 				break;
 			case STATE_INSTALL_PAYLOAD:
@@ -291,7 +319,7 @@ int main()
 				}
 
 				{
-					Result ret = write_savedata("/payload.bin", payload_buf, payload_size);
+					Result ret = write_payload("/payload.bin", payload_buf, payload_size);
 					if(ret)
 					{
 						sprintf(status, "Failed to install payload\n    Error code : %08X", (unsigned int)ret);
