@@ -13,7 +13,7 @@ I can't support this, but there are a few quick pointers:
 * Check you have all the required files (especially the save0x files) in the correct directory.
 * Check that you have a working internet connection, since the installer downloads the payload from smea.
 * If all else fails, try wiping the OoT3D save data. Again, the installer won't do this for you.
-This has been tested on a 9.9 O3DS(XL) (USA).
+The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA OLD and JPN NEW. No EUR 3DS over here to test with, I'm afraid.
 
 ## Quick overview
 We already have all the pieces in place:
