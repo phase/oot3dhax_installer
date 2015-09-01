@@ -5,7 +5,7 @@ With expressions of severe indebtedness to smea and yellows8.
 
 ## Instructions:
 * (Optional) Backup and then wipe your OoT3D saves (start from home menu, hold down ABXY). The installer will not do this for you.
-* Put .smdh, .xml, .3dsx files in a ootsdhax_installer folder, along with the save0x.bin.* files (optionally just the one for your region).
+* Put .smdh, .xml, .3dsx files in sd:/3ds/ootsdhax_installer/, along with the save0x.bin.* files (optionally just the one for your region).
 * Open installer via tubehax or other *hax. Follow instructions.
 
 ## Troubleshooting
@@ -21,7 +21,6 @@ We already have all the pieces in place:
 * smea's oot3dhax fork from yellows8, which works
 So it's just a matter of making it use OoT3D saves instead of ironhax saves.
 
-## TODO
 One optional item we would like:
 * a quick modification that should let us load payload from SD card, not gamecard
 
