@@ -13,7 +13,7 @@ I can't support this, but there are a few quick pointers:
 * Check you have all the required files (especially the save0x files) in the correct directory.
 * Check that you have a working internet connection, since the installer downloads the payload from smea.
 * If all else fails, try wiping the OoT3D save data. Again, the installer won't do this for you.
-The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA O3DS 9.9 and JPN N3DS 9.9. No EUR 3DS or older FW versions over here to test with, I'm afraid.
+The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA O3DS 9.9 and JPN N3DS 9.9. <a href="https://gbatemp.net/threads/quick-and-dirty-oot3d-port-of-ironhax-installer.396312/#post-5647053">I have a report of the install working on a EUR 9.9 N3DS.</a> No older FW versions over here to test with, I'm afraid.
 
 ## Quick overview
 We already have all the pieces in place:
