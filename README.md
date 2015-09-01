@@ -1,10 +1,19 @@
 # ootsdhax_installer
 Erm, can I use OoT3D instead of Ironfall? The answer is probably yes.
 
+With expressions of severe indebtedness to smea and yellows8.
+
 ## Instructions:
 * (Optional) Backup and then wipe your OoT3D saves (start from home menu, hold down ABXY). The installer will not do this for you.
 * Put .smdh, .xml, .3dsx files in a ootsdhax_installer folder, along with the save0x.bin.* files (optionally just the one for your region).
 * Open installer via tubehax or other *hax. Follow instructions.
+
+## Troubleshooting
+I can't support this, but there are a few quick pointers:
+* Check you have all the required files (especially the save0x files) in the correct directory.
+* Check that you have a working internet connection, since the installer downloads the payload from smea.
+* If all else fails, try wiping the OoT3D save data. Again, the installer won't do this for you.
+This has been tested on a 9.9 O3DS(XL) (USA).
 
 ## Quick overview
 We already have all the pieces in place:
