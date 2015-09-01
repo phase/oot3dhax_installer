@@ -32,9 +32,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
-APP_TITLE       := ironhax installer
-APP_DESCRIPTION := Use this to install ironhax to your system. Requires    IronFall and an internet connection.
-APP_AUTHOR      := smea
+APP_TITLE       := oot3dhax installer
+APP_DESCRIPTION := Use this to install oot3dhax!
+APP_AUTHOR      := meladroit/willidleaway but mostly smea
 
 #---------------------------------------------------------------------------------
 # options for code generation

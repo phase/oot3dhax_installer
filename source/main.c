@@ -7,7 +7,7 @@
 #include "filesystem.h"
 // #include "blz.h"
 #include "firmware.h"
-#include "savegame_data.h"
+// #include "savegame_data.h"
 
 char status[256];
 
@@ -61,34 +61,6 @@ Result write_savedata(char* path, u8* data, u32 size)
 	return ret;
 }
 
-Result write_payload(char* path, u8* data, u32 size)
-{
-	if(!path || !data || !size)return -1;
-
-	Handle outFileHandle;
-	u32 bytesWritten;
-	Result ret = 0;
-	int fail = 0;
-
-	ret = FSUSER_OpenFile(&sdmcFsHandle, &outFileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_CREATE | FS_OPEN_WRITE, FS_ATTRIBUTE_NONE);
-	if(ret){fail = -8; goto writeFail;}
-
-	ret = FSFILE_Write(outFileHandle, &bytesWritten, 0x0, data, size, 0x10001);
-	if(ret){fail = -9; goto writeFail;}
-
-	ret = FSFILE_Close(outFileHandle);
-	if(ret){fail = -10; goto writeFail;}
-
-	ret = FSUSER_ControlArchive(sdmcFsHandle, sdmcArchive);
-
-	writeFail:
-	if(fail)sprintf(status, "failed to write to file : %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
-	else sprintf(status, "successfully wrote to file !\n     %08X               ", (unsigned int)bytesWritten);
-
-	return ret;
-}
-
-
 typedef enum
 {
 	STATE_NONE,
@@ -139,6 +111,41 @@ Result http_download(httpcContext *context, u8** out_buf, u32* out_size)
 	return 0;
 }
 
+u8* save_buffer = NULL;
+off_t save_size;
+
+int read_payload(char* path, u8* data)
+{
+    FILE *file = fopen(path,"rb");
+    if (file == NULL)
+        return 1;
+
+    // seek to end of file
+    fseek(file,0,SEEK_END);
+
+    // file pointer tells us the size
+    save_size = ftell(file);
+
+    // seek back to start
+    fseek(file,0,SEEK_SET);
+
+    //allocate a buffer
+    save_buffer=malloc(save_size);
+    if(!save_buffer)
+        return 1;
+
+    //read contents !
+    off_t bytesRead = fread(save_buffer,1,save_size,file);
+
+    //close the file because we like being nice and tidy
+    fclose(file);
+
+    if(save_size!=bytesRead)
+        return 1;
+    return 0;
+}
+
+
 int main()
 {
 	httpcInit();
@@ -182,13 +189,13 @@ int main()
 			switch(next_state)
 			{
 				case STATE_INITIAL:
-					strcat(top_text, " Welcome to the ironhax installer ! Please proceedwith caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
+					strcat(top_text, " Welcome to the oot3dhax installer! Please proceedwith caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
 					break;
 				case STATE_SELECT_SLOT:
-					strcat(top_text, " Please select the savegame slot IRONHAX will be\ninstalled to. D-Pad to select, A to continue.\n");
+					strcat(top_text, " Please select the savegame slot oot3dhax will be\ninstalled to. D-Pad to select, A to continue.\n");
 					break;
 				case STATE_SELECT_IRON_VERSION:
-					strcat(top_text, "\n\n\n Please select the version of IRONFALL you have\ninstalled. D-Pad to select, A to continue.\n");
+					strcat(top_text, "\n\n\n This is your last chance to cancel.\nOh, what's your favourite version of Ironfall?\n");
 					break;
 				case STATE_SELECT_FIRMWARE:
 					strcat(top_text, "\n\n\n Please select your console's firmware version.\nOnly select NEW 3DS if you own a New 3DS (XL).\nD-Pad to select, A to continue.\n");
@@ -204,7 +211,7 @@ int main()
 					strcat(top_text, " Installing payload...\n");
 					break;
 				case STATE_INSTALLED_PAYLOAD:
-					strcat(top_text, " Done ! ironhax was successfully installed.");
+					strcat(top_text, " Done! oot3dhax was successfully installed.");
 					break;
 				case STATE_ERROR:
 					strcat(top_text, " Looks like something went wrong. :(\n");
@@ -216,8 +223,8 @@ int main()
 		}
 
 		consoleSelect(&topConsole);
-		printf("\x1b[0;%dHironhax installer", (50 - 17) / 2);
-		printf("\x1b[1;%dHby smea\n\n\n", (50 - 7) / 2);
+		printf("\x1b[0;%dHoot3dhax installer", (50 - 17) / 2);
+		printf("\x1b[1;%dHmostly by smea\n\n\n", (50 - 7) / 2);
 		printf(top_text);
 
 		// state function
@@ -308,8 +315,11 @@ int main()
 			case STATE_INSTALL_PAYLOAD:
 				{
 					static char filename[128];
-					sprintf(filename, "/Data%d", selected_slot);
-					Result ret = write_savedata(filename, getSavegameData(firmware_version, selected_iron_version, selected_slot), 0x2000);
+                    
+                    sprintf(filename, "save0x.bin.%s", firmware_labels[4][firmware_version[4]]);
+					read_payload(filename, save_buffer);
+					sprintf(filename, "/save0%d.bin", selected_slot);
+					Result ret = write_savedata(filename, save_buffer, save_size);
 					if(ret)
 					{
 						sprintf(status, "Failed to install %s.\n    Error code : %08X", filename, (unsigned int)ret);
@@ -319,7 +329,7 @@ int main()
 				}
 
 				{
-					Result ret = write_payload("/payload.bin", payload_buf, payload_size);
+					Result ret = write_savedata("/payload.bin", payload_buf, payload_size);
 					if(ret)
 					{
 						sprintf(status, "Failed to install payload\n    Error code : %08X", (unsigned int)ret);
