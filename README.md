@@ -1,4 +1,4 @@
-# ootsdhax_installer
+# oot3dhax_installer
 Erm, can I use OoT3D instead of Ironfall? The answer is probably yes.
 
 With expressions of severe indebtedness to smea and yellows8.
