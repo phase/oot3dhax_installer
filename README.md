@@ -5,7 +5,7 @@ With expressions of severe indebtedness to smea and yellows8.
 
 ## Instructions:
 * (Optional) Backup and then wipe your OoT3D saves (start from home menu, hold down ABXY). The installer will not do this for you.
-* Put .smdh, .xml, .3dsx files in sd:/3ds/ootsdhax_installer/, along with the save0x.bin.* files (optionally just the one for your region).
+* Put .smdh, .xml, .3dsx files in sd:/3ds/ootsdhax_installer/, along with the save0x.bin.* files (optionally just the one for your region). Just download the 3ds directory from the repo and move the folder appropriately.
 * Open installer via tubehax or other *hax. Make sure to select OoT3D as the target app. (If you don't see a target selection screen, exit and restart.) Follow instructions.
 
 ## Troubleshooting
