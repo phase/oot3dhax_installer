@@ -66,7 +66,6 @@ typedef enum
 	STATE_NONE,
 	STATE_INITIAL,
 	STATE_SELECT_SLOT,
-	STATE_SELECT_IRON_VERSION,
 	STATE_SELECT_FIRMWARE,
 	STATE_DOWNLOAD_PAYLOAD,
 	STATE_COMPRESS_PAYLOAD,
@@ -169,7 +168,6 @@ int main()
 	top_text[0] = '\0';
 
 	int selected_slot = 0;
-	int selected_iron_version = 1;
 
 	int firmware_version[firmware_length] = {0, 0, 9, 0, 0};
 	int firmware_selected_value = 0;
@@ -193,9 +191,6 @@ int main()
 					break;
 				case STATE_SELECT_SLOT:
 					strcat(top_text, " Please select the savegame slot oot3dhax will be\ninstalled to. D-Pad to select, A to continue.\n");
-					break;
-				case STATE_SELECT_IRON_VERSION:
-					strcat(top_text, "\n\n\n This is your last chance to cancel.\nOh, what's your favourite version of Ironfall?\n");
 					break;
 				case STATE_SELECT_FIRMWARE:
 					strcat(top_text, "\n\n\n Please select your console's firmware version.\nOnly select NEW 3DS if you own a New 3DS (XL).\nD-Pad to select, A to continue.\n");
@@ -237,7 +232,7 @@ int main()
 				{
 					if(hidKeysDown() & KEY_UP)selected_slot++;
 					if(hidKeysDown() & KEY_DOWN)selected_slot--;
-					if(hidKeysDown() & KEY_A)next_state = STATE_SELECT_IRON_VERSION;
+					if(hidKeysDown() & KEY_A)next_state = STATE_SELECT_FIRMWARE;
 
 					if(selected_slot < 0) selected_slot = 0;
 					if(selected_slot > 2) selected_slot = 2;
@@ -245,20 +240,6 @@ int main()
 					printf((selected_slot >= 2) ? "                                             \n" : "                                            ^\n");
 					printf("                            Selected slot : %d  \n", selected_slot + 1);
 					printf((!selected_slot) ? "                                             \n" : "                                            v\n");
-				}
-				break;
-			case STATE_SELECT_IRON_VERSION:
-				{
-					if(hidKeysDown() & KEY_UP)selected_iron_version++;
-					if(hidKeysDown() & KEY_DOWN)selected_iron_version--;
-					if(hidKeysDown() & KEY_A)next_state = STATE_SELECT_FIRMWARE;
-
-					if(selected_iron_version < 0) selected_iron_version = 0;
-					if(selected_iron_version > 1) selected_iron_version = 1;
-
-					printf((selected_iron_version >= 1) ? "                                             \n" : "                                             ^\n");
-					printf("                Selected IRONFALL version : 1.%d  \n", selected_iron_version);
-					printf((!selected_iron_version) ? "                                             \n" : "                                             v\n");
 				}
 				break;
 			case STATE_SELECT_FIRMWARE:
