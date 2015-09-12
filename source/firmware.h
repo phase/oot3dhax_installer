@@ -34,6 +34,8 @@ static char* getMenuVersion(int v[])
 		return return_values[6];
 	else if(v[2]==9 && v[4]==FW_REGION_USA)
 		return return_values[7];
+	else if(v[2]==10 && v[4]==FW_REGION_USA)
+		return return_values[7];
 	else return return_values[8];
 }
 
@@ -64,8 +66,8 @@ static void getPayloadName(int v[], char* out)
 	sprintf(out, "%s_%s_%s_%s", getFirmVersion(v), getRegion(v), getMenuVersion(v), getMsetVersion(v));
 }
 
-const char* firmware_labels[][10] = {{"OLD 3DS", "NEW 3DS"}, {"9"}, {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}, {"0"}, {"USA", "EUR", "JPN"}};
-const int firmware_num_values[] = {2, 1, 10, 1, 3};
+const char* firmware_labels[][10] = {{"OLD 3DS", "NEW 3DS"}, {"9", "10"}, {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}, {"0"}, {"USA", "EUR", "JPN"}};
+const int firmware_num_values[] = {2, 2, 10, 1, 3};
 const int firmware_format_offsets[] = {3, 8, 10, 12, 15};
 #define firmware_output_format "%s %s-%s-%s %s"
 #define firmware_length 5
