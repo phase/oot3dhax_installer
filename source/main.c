@@ -68,7 +68,6 @@ typedef enum
 	STATE_SELECT_SLOT,
 	STATE_SELECT_FIRMWARE,
 	STATE_DOWNLOAD_PAYLOAD,
-	STATE_COMPRESS_PAYLOAD,
 	STATE_INSTALL_PAYLOAD,
 	STATE_INSTALLED_PAYLOAD,
 	STATE_ERROR,
@@ -187,7 +186,7 @@ int main()
 			switch(next_state)
 			{
 				case STATE_INITIAL:
-					strcat(top_text, " Welcome to the oot3dhax installer! Please proceedwith caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
+					strcat(top_text, " Welcome to the oot3dhax installer! Please proceed with caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
 					break;
 				case STATE_SELECT_SLOT:
 					strcat(top_text, " Please select the savegame slot oot3dhax will be\ninstalled to. D-Pad to select, A to continue.\n");
@@ -198,9 +197,6 @@ int main()
 				case STATE_DOWNLOAD_PAYLOAD:
 					getPayloadName(firmware_version, payload_name);
 					sprintf(top_text, "%s\n\n\n Downloading payload... %s\n", top_text, payload_name);
-					break;
-				case STATE_COMPRESS_PAYLOAD:
-					strcat(top_text, " Processing payload...\n");
 					break;
 				case STATE_INSTALL_PAYLOAD:
 					strcat(top_text, " Installing payload...\n");
@@ -286,12 +282,8 @@ int main()
 						break;
 					}
 
-					next_state = STATE_COMPRESS_PAYLOAD;
+					next_state = STATE_INSTALL_PAYLOAD;
 				}
-				break;
-			case STATE_COMPRESS_PAYLOAD:
-				//payload_buf = BLZ_Code(payload_buf, payload_size, (unsigned int*)&payload_size, BLZ_NORMAL);
-				next_state = STATE_INSTALL_PAYLOAD;
 				break;
 			case STATE_INSTALL_PAYLOAD:
 				{
