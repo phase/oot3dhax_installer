@@ -33,8 +33,8 @@ DATA		:=	data
 INCLUDES	:=	include
 
 APP_TITLE       := oot3dhax installer
-APP_DESCRIPTION := Use this to install oot3dhax!
-APP_AUTHOR      := meladroit/willidleaway but mostly smea
+APP_DESCRIPTION := Use this to install oot3dhax! Requires cartridge/download and internet.
+APP_AUTHOR      := meladroit, willidleaway, yellows8, and smea
 
 #---------------------------------------------------------------------------------
 # options for code generation

@@ -212,7 +212,7 @@ int main()
 
 		consoleSelect(&topConsole);
 		printf("\x1b[0;%dHoot3dhax installer", (50 - 17) / 2);
-		printf("\x1b[1;%dHmostly by smea\n\n\n", (50 - 7) / 2);
+		printf("\x1b[1;%dHby smea, yellows8, and meladroit\n\n\n", (50 - 31) / 2);
 		printf(top_text);
 
 		// state function
