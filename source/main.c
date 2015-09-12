@@ -183,7 +183,7 @@ int main()
 			switch(next_state)
 			{
 				case STATE_INITIAL:
-					strcat(top_text, " Welcome to the oot3dhax installer! Please proceed with caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
+					strcat(top_text, " Welcome to the oot3dhax installer! Please proceedwith caution, as you might lose data if you don't.You may press START at any time to return to menu.\n                            Press A to continue.\n\n");
 					break;
 				case STATE_SELECT_SLOT:
 					strcat(top_text, " Please select the savegame slot oot3dhax will be\ninstalled to. D-Pad to select, A to continue.\n");

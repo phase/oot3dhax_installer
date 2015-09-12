@@ -1,4 +1,4 @@
-filesystem.o: /home/thete/ootsdhax_installer/source/filesystem.c \
+filesystem.o: /home/thete/oot3dhax_installer/source/filesystem.c \
  /home/thete/devkitPro/libctru/include/3ds.h \
  /home/thete/devkitPro/libctru/include/3ds/types.h \
  /home/thete/devkitPro/libctru/include/3ds/svc.h \
@@ -39,7 +39,7 @@ filesystem.o: /home/thete/ootsdhax_installer/source/filesystem.c \
  /home/thete/devkitPro/libctru/include/3ds/gpu/shaderProgram.h \
  /home/thete/devkitPro/libctru/include/3ds/sdmc.h \
  /home/thete/devkitPro/libctru/include/3ds/romfs.h \
- /home/thete/ootsdhax_installer/source/filesystem.h
+ /home/thete/oot3dhax_installer/source/filesystem.h
 
 /home/thete/devkitPro/libctru/include/3ds.h:
 
@@ -121,4 +121,4 @@ filesystem.o: /home/thete/ootsdhax_installer/source/filesystem.c \
 
 /home/thete/devkitPro/libctru/include/3ds/romfs.h:
 
-/home/thete/ootsdhax_installer/source/filesystem.h:
+/home/thete/oot3dhax_installer/source/filesystem.h:
