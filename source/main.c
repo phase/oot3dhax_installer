@@ -1,13 +1,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <3ds.h>
 
 #include "filesystem.h"
-// #include "blz.h"
 #include "firmware.h"
-// #include "savegame_data.h"
 
 char status[256];
 
