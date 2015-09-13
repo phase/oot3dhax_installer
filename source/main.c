@@ -52,8 +52,8 @@ Result write_savedata(char* path, u8* data, u32 size)
 	ret = FSUSER_ControlArchive(saveGameFsHandle, saveGameArchive);
 
 	writeFail:
-	if(fail)sprintf(status, "failed to write to file : %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
-	else sprintf(status, "successfully wrote to file !\n     %08X               ", (unsigned int)bytesWritten);
+	if(fail)sprintf(status, "Failed to write to file: %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
+	else sprintf(status, "Successfully wrote to file!\n     %08X               ", (unsigned int)bytesWritten);
 
 	return ret;
 }
@@ -212,7 +212,7 @@ int main()
 
 		consoleSelect(&topConsole);
 		printf("\x1b[0;%dHoot3dhax installer", (50 - 17) / 2);
-		printf("\x1b[1;%dHby smea, yellows8, and meladroit\n\n\n", (50 - 31) / 2);
+		printf("\x1b[1;%dHby smea, yellows8, phase, and meladroit\n\n\n", (50 - 38) / 2);
 		printf(top_text);
 
 		// state function
@@ -231,7 +231,7 @@ int main()
 					if(selected_slot > 2) selected_slot = 2;
 
 					printf((selected_slot >= 2) ? "                                             \n" : "                                            ^\n");
-					printf("                            Selected slot : %d  \n", selected_slot + 1);
+					printf("                            Selected slot: %d  \n", selected_slot + 1);
 					printf((!selected_slot) ? "                                             \n" : "                                            v\n");
 				}
 				break;
@@ -253,7 +253,7 @@ int main()
 
 					int offset = 28 + firmware_format_offsets[firmware_selected_value];
 					printf((firmware_version[firmware_selected_value] < firmware_num_values[firmware_selected_value] - 1) ? "%*s^%*s" : "%*s-%*s", offset, " ", 50 - offset - 1, " ");
-					printf("        Selected firmware : " "%s %s-%s-%s %s" "\n", firmware_labels[0][firmware_version[0]], firmware_labels[1][firmware_version[1]], firmware_labels[2][firmware_version[2]], firmware_labels[3][firmware_version[3]], firmware_labels[4][firmware_version[4]]);
+					printf("        Selected firmware: " "%s %s-%s-%s %s" "\n", firmware_labels[0][firmware_version[0]], firmware_labels[1][firmware_version[1]], firmware_labels[2][firmware_version[2]], firmware_labels[3][firmware_version[3]], firmware_labels[4][firmware_version[4]]);
 					printf((firmware_version[firmware_selected_value] > 0) ? "%*sv%*s" : "%*s-%*s", offset, " ", 50 - offset - 1, " ");
 				}
 				break;
@@ -266,7 +266,7 @@ int main()
 					Result ret = httpcOpenContext(&context, url, 0);
 					if(ret)
 					{
-						sprintf(status, "Failed to open http context\n    Error code : %08X", (unsigned int)ret);
+						sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
 						next_state = STATE_ERROR;
 						break;
 					}
@@ -274,7 +274,7 @@ int main()
 					ret = http_download(&context, &payload_buf, &payload_size);
 					if(ret)
 					{
-						sprintf(status, "Failed to download payload\n    Error code : %08X", (unsigned int)ret);
+						sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
 						next_state = STATE_ERROR;
 						break;
 					}
@@ -292,7 +292,7 @@ int main()
 					Result ret = write_savedata(filename, save_buffer, save_size);
 					if(ret)
 					{
-						sprintf(status, "Failed to install %s.\n    Error code : %08X", filename, (unsigned int)ret);
+						sprintf(status, "Failed to install %s.\n    Error code: %08X", filename, (unsigned int)ret);
 						next_state = STATE_ERROR;
 						break;
 					}
@@ -307,7 +307,7 @@ int main()
 						break;
 					}
 
-					next_state = STATE_INSTALLED_PAYLOAD;	
+					next_state = STATE_INSTALLED_PAYLOAD;
 				}
 				break;
 			case STATE_INSTALLED_PAYLOAD:
@@ -318,7 +318,7 @@ int main()
 		}
 
 		consoleSelect(&bttmConsole);
-		printf("\x1b[0;0H  Current status :\n    %s\n", status);
+		printf("\x1b[0;0H  \n Found a bug? Go to\n    https://github.com/meladroit/oot3dhax_installer/ \n\n  Current status:\n    %s\n", status);
 
 		gspWaitForVBlank();
 	}

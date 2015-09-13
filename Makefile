@@ -132,8 +132,10 @@ $(BUILD):
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).3dsx $(OUTPUT).smdh $(OUTPUT).elf
+	@echo Removing builds...
+	@rm -fr $(BUILD)
+	@rm -fr 3ds/$(TARGET)
+	@mkdir -p 3ds/$(TARGET)
 
 
 #---------------------------------------------------------------------------------
