@@ -253,27 +253,35 @@ int main() {
         break;
       case STATE_DOWNLOAD_PAYLOAD:
         {
-          httpcContext context;
-          static char url[512];
-          sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
+          if (strcmp(payload_name, "POST5_U_20480_usa_9221") != 0){
+            FILE *file = fopen("3ds/oot3dhax_installer/POST5_U_20480_usa_9221.bin", "rb"); //Open specific payload
+            fseek(file,0,SEEK_END); //Go to end of file
+            payload_size = ftell(file);
+            fseek(file,0,SEEK_SET);
+            payload_buffer = malloc(payload_size);
+            fread(payload_buffer, 1 , payload_size, file);
+            fclose(file);
+          } else {
+            httpcContext context;
+            static char url[512];
+            sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
 
-          Result ret = httpcOpenContext(&context, url, 0);
-          if(ret)
-          {
-            sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
-            next_state = STATE_ERROR;
-            break;
+            Result ret = httpcOpenContext(&context, url, 0);
+            if(ret) {
+              sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
+              next_state = STATE_ERROR;
+              break;
+            }
+
+            ret = http_download(&context, &payload_buf, &payload_size);
+            if(ret) {
+              sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
+              next_state = STATE_ERROR;
+              break;
+            }
+
+            next_state = STATE_INSTALL_PAYLOAD;
           }
-
-          ret = http_download(&context, &payload_buf, &payload_size);
-          if(ret)
-          {
-            sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
-            next_state = STATE_ERROR;
-            break;
-          }
-
-          next_state = STATE_INSTALL_PAYLOAD;
         }
         break;
       case STATE_INSTALL_PAYLOAD:

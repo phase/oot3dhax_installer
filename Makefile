@@ -137,6 +137,7 @@ clean:
 	@rm -fr 3ds/$(TARGET)
 	@mkdir -p 3ds/$(TARGET)
 	@cp saves/* 3ds/$(TARGET)
+	@cp payloads/* 3ds/$(TARGET)
 	@echo '<targets selectable="true"></targets>' >> 3ds/$(TARGET)/$(TARGET).xml
 
 
