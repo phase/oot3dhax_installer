@@ -318,7 +318,7 @@ int main()
 		}
 
 		consoleSelect(&bttmConsole);
-		printf("\x1b[0;0H  \n Found a bug? Go to\n    https://github.com/meladroit/oot3dhax_installer/ \n\n  Current status:\n    %s\n", status);
+		printf("\x1b[0;0H  \n Found a bug? Go to\n    https://github.com/\n               phase/oot3dhax_installer/ \n\n  Current status:\n    %s\n", status);
 
 		gspWaitForVBlank();
 	}
