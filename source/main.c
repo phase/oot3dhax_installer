@@ -166,6 +166,10 @@ int main() {
   u8* payload_buf = NULL;
   u32 payload_size = 0;
 
+  const char *local_payloads[2];
+  local_payloads[0] = "POST5_U_20480_usa_9221";
+  local_payloads[1] = "N3DS_U_20480_usa_9221";
+  
   while (aptMainLoop())
   {
     hidScanInput();
@@ -253,35 +257,42 @@ int main() {
         break;
       case STATE_DOWNLOAD_PAYLOAD:
         {
-          if (strcmp(payload_name, "POST5_U_20480_usa_9221") != 0){
-            FILE *file = fopen("3ds/oot3dhax_installer/POST5_U_20480_usa_9221.bin", "rb"); //Open specific payload
-            fseek(file,0,SEEK_END); //Go to end of file
-            payload_size = ftell(file);
-            fseek(file,0,SEEK_SET);
-            payload_buffer = malloc(payload_size);
-            fread(payload_buffer, 1 , payload_size, file);
-            fclose(file);
-          } else {
-            httpcContext context;
-            static char url[512];
-            sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
-
-            Result ret = httpcOpenContext(&context, url, 0);
-            if(ret) {
-              sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
-              next_state = STATE_ERROR;
-              break;
+          int i = 0;
+          while(local_payloads[i])) {
+            if (strcmp(local_payloads[i], payload_name) != 0) {
+              char payload_location[64]; //Build Payload Location String
+              stpcpy(payload_location, "3ds/oot3dhax_installer/");
+              strcat(payload_location, payload_name);
+              strcat(payload_location, ".bin");
+              FILE *file = fopen(payload_location, "rb"); //Open specific payload
+              fseek(file,0,SEEK_END); //Go to end of file
+              payload_size = ftell(file); //Get Payload size
+              fseek(file,0,SEEK_SET);
+              payload_buffer = malloc(payload_size); //Prepare Payload Buffer size
+              fread(payload_buffer, 1 , payload_size, file); //Get Payload contents
+              fclose(file);
+              goto payload_finish; //Skip download because we found it locally
             }
-
-            ret = http_download(&context, &payload_buf, &payload_size);
-            if(ret) {
-              sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
-              next_state = STATE_ERROR;
-              break;
-            }
-
-            next_state = STATE_INSTALL_PAYLOAD;
           }
+          httpcContext context;
+          static char url[512];
+          sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
+
+          Result ret = httpcOpenContext(&context, url, 0);
+          if(ret) {
+            sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
+            next_state = STATE_ERROR;
+            break;
+          }
+
+          ret = http_download(&context, &payload_buf, &payload_size);
+          if(ret) {
+            sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
+            next_state = STATE_ERROR;
+            break;
+          }
+          payload_finish:
+          next_state = STATE_INSTALL_PAYLOAD;
         }
         break;
       case STATE_INSTALL_PAYLOAD:
