@@ -8,8 +8,8 @@ A second-degree hax installer for your 3DS
 * Open installer via a *hax. Make sure to select OoT3D as the target application. (If you don't see a target selection screen, exit and restart.) Follow the instructions.
 
 3DS Firmwares that have local payloads:
-* Old 3DS 9.9.0 (`POST5_U_20480_usa_9221`)
-* New 3DS 9.9.0 (`N3DS_U_20480_usa_9221`)
+* Old 3DS USA 9.9.0 (`POST5_U_20480_usa_9221`)
+* New 3DS USA 9.9.0 (`N3DS_U_20480_usa_9221`)
 
 ## Troubleshooting
 **eShop versus Gamecard is irrelevant**
