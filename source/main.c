@@ -258,24 +258,29 @@ int main() {
       case STATE_DOWNLOAD_PAYLOAD:
         {
           int i = 0;
-          while(local_payloads[i])) {
-            if (strcmp(local_payloads[i], payload_name) != 0) {
-              char payload_location[64]; //Build Payload Location String
+          while(local_payloads[i])) { //Go through all the local payloads
+            if (strcmp(local_payloads[i], payload_name) != 0) { //If the payload we need is on the SD card
+              char payload_location[64]; //Build payload location string
               stpcpy(payload_location, "3ds/oot3dhax_installer/");
               strcat(payload_location, payload_name);
               strcat(payload_location, ".bin");
+              
               FILE *file = fopen(payload_location, "rb"); //Open specific payload
               fseek(file,0,SEEK_END); //Go to end of file
-              payload_size = ftell(file); //Get Payload size
-              fseek(file,0,SEEK_SET);
-              payload_buffer = malloc(payload_size); //Prepare Payload Buffer size
-              fread(payload_buffer, 1 , payload_size, file); //Get Payload contents
-              fclose(file);
+              payload_size = ftell(file); //Get payload size
+              fseek(file,0,SEEK_SET); //Go back up
+              
+              payload_buf = malloc(payload_size); //Prepare payload buffer size
+              fread(payload_buf, 1 , payload_size, file); //Get payload contents
+              fclose(file); //Close file
+              
               goto payload_finish; //Skip download because we found it locally
             }
+            i++;
           }
+          //Download Payload
           httpcContext context;
-          static char url[512];
+          static char url[512]; //Build URL for Payload
           sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
 
           Result ret = httpcOpenContext(&context, url, 0);
@@ -285,7 +290,7 @@ int main() {
             break;
           }
 
-          ret = http_download(&context, &payload_buf, &payload_size);
+          ret = http_download(&context, &payload_buf, &payload_size); //Put Payload contents onto payload buffer
           if(ret) {
             sprintf(status, "Failed to download payload\n    Error code: %08X", (unsigned int)ret);
             next_state = STATE_ERROR;
