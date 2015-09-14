@@ -34,7 +34,7 @@ INCLUDES	:=	include
 
 APP_TITLE       := oot3dhax installer
 APP_DESCRIPTION := Use this to install oot3dhax! Requires cartridge/download and internet.
-APP_AUTHOR      := meladroit, willidleaway, yellows8, and smea
+APP_AUTHOR      := meladroit, phase, willidleaway, yellows8, and smea
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -136,6 +136,7 @@ clean:
 	@rm -fr $(BUILD)
 	@rm -fr 3ds/$(TARGET)
 	@mkdir -p 3ds/$(TARGET)
+	@cp saves/* 3ds/$(TARGET)
 
 
 #---------------------------------------------------------------------------------
