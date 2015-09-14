@@ -1,27 +1,30 @@
-# oot3dhax_installer
-Erm, can I use OoT3D instead of Ironfall? The answer is probably yes.
+# oot3dhax_installer2
+A second-degree hax installer for your 3DS
 
-With expressions of severe indebtedness to smea and yellows8.
-
-## Instructions:
-* (Optional) Backup and then wipe your OoT3D saves (start from home menu, hold down ABXY). The installer will not do this for you.
-* Put .smdh, .xml, .3dsx files in sd:/3ds/ootsdhax_installer/, along with the save0x.bin.* files (optionally just the one for your region). Just download the 3ds directory from the repo and move the folder appropriately.
-* Open installer via tubehax or other *hax. Make sure to select OoT3D as the target app. (If you don't see a target selection screen, exit and restart.) Follow instructions.
+## Instructions
+* Wipe your OoT3D saves (start from home menu, hold down ABXY). **The installer will not do this for you.**
+* (Optional) Run `make clean all`, this will get the latest build, but it is not needed.
+* Clone the repo and copy the folder within `3ds/` into your `sd:/3ds/`
+* Open installer via a *hax. Make sure to select OoT3D as the target application. (If you don't see a target selection screen, exit and restart.) Follow the instructions.
 
 ## Troubleshooting
-I can't support this, but there are a few quick pointers:
-* Check you have all the required files (especially the save0x files) in the correct directory.
+**eShop versus Gamecard is irrelevant**
+
+Here are a few quick pointers:
+* Check you have all the required files (especially the save0x files & `oot3dhax_installer.xml`) in the correct directory.
 * Check that you have a working internet connection, since the installer downloads the payload from smea.
 * If all else fails, try wiping the OoT3D save data. Again, the installer won't do this for you.
 
-The installer has been tested on a 9.9 O3DS(XL) (USA). The saves have been tested for USA O3DS 9.9 and JPN N3DS 9.9. <a href="https://gbatemp.net/threads/quick-and-dirty-oot3d-port-of-ironhax-installer.396312/#post-5647053">I have a report of the install working on a EUR 9.9 N3DS.</a> <a href="http://gbatemp.net/threads/quick-and-dirty-oot3d-port-of-ironhax-installer.396312/#post-5647329">I also have a report of the install working on a USA 9.0 N3DS</a>, so I'm guessing this is working for all ninjhax2-compatible 3DS units. eShop versus gamecard should be irrelevant, as long as you can select OoT3D as the target app when launching the installer.
+List of tested & working devices devices:
+* 9.9 O3DS USA & JPN
+* 9.9 N3DS EUR
 
 ## Quick overview
 We already have all the pieces in place:
 * smea's sploit_installer, which downloads ninjhax2 otherapp payloads
-* smea's oot3dhax fork from yellows8, which works
+* yellows8's oot3dhax, which triggers and exploit in OoT3D
 
-So it's just a matter of making it use OoT3D saves instead of ironhax saves. If you wanted to use regionFOUR or ninjhax1 payloads and fetch them either from a different URL or from the SD card, there's nothing stopping you as long as those payloads support otherapp (which the ironhax payloads do, since they're built for apps that aren't Cubic Ninja).
+So it's just a matter of making it use OoT3D saves instead of IronFall saves. If you wanted to use regionFOUR or ninjhax1 payloads and fetch them either from a different URL or from the SD card, there's nothing stopping you as long as those payloads support otherapp (which the ironhax payloads do, since they're built for apps that aren't Cubic Ninja).
 
 One optional item we would like:
 * a quick modification that should let us load payload from SD card, not gamecard
