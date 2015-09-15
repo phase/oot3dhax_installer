@@ -166,6 +166,7 @@ int main() {
   u8* payload_buf = NULL;
   u32 payload_size = 0;
 
+  int contains_useable_local_payload = 0;
   const char *local_payloads[2];
   local_payloads[0] = "POST5_U_20480_usa_9221";
   local_payloads[1] = "N3DS_U_20480_usa_9221";
@@ -191,7 +192,7 @@ int main() {
           break;
         case STATE_DOWNLOAD_PAYLOAD:
           getPayloadName(firmware_version, payload_name);
-          sprintf(top_text, "%s\n\n\n Downloading payload... %s\n", top_text, payload_name);
+          sprintf(top_text, "%s\n\n\n Retrieving payload... %s\n", top_text, payload_name);
           break;
         case STATE_INSTALL_PAYLOAD:
           strcat(top_text, " Installing payload...\n");
@@ -258,9 +259,11 @@ int main() {
       case STATE_DOWNLOAD_PAYLOAD:
         {
           int i = 0;
-          while(local_payloads[i])) { //Go through all the local payloads
+          while(local_payloads[i]) { //Go through all the local payloads
             if (strcmp(local_payloads[i], payload_name) != 0) { //If the payload we need is on the SD card
-              char payload_location[64]; //Build payload location string
+              contains_useable_local_payload = 1;
+              sprintf(status, "Found local payload %s", payload_name);
+              char payload_location[64]; //Build payload location string (needs to be around 60 characters)
               stpcpy(payload_location, "3ds/oot3dhax_installer/");
               strcat(payload_location, payload_name);
               strcat(payload_location, ".bin");
@@ -283,6 +286,7 @@ int main() {
           static char url[512]; //Build URL for Payload
           sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
 
+          sprintf(status, "Downloading payload %s", payload_name);
           Result ret = httpcOpenContext(&context, url, 0);
           if(ret) {
             sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
