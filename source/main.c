@@ -259,6 +259,11 @@ int main() {
       case STATE_DOWNLOAD_PAYLOAD:
         {
           int i = 0;
+          consoleSelect(&topConsole);
+          memset(&top_text, 0, sizeof(top_text));
+          top_text[0] = '\0';
+          strcpy(top_text, "Searching through local payloads...\n");
+          printf(top_text);
           while(local_payloads[i]) { //Go through all the local payloads
             if (strcmp(local_payloads[i], payload_name) != 0) { //If the payload we need is on the SD card
               contains_useable_local_payload = 1;
