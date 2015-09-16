@@ -16,36 +16,22 @@ typedef enum
 
 static char* getMenuVersion(int v[])
 {
-  static char* return_values[] = {"11272", "12288", "13330", "14336", "15360", "16404", "17415", "20480_usa", "19456"};
+  static char* return_values[] = {"20480_usa", "19456", "21504_usa", "20480"};
 
-  if(v[2]==0 || v[2]==1)
-    return return_values[0];
-  else if(v[2]==2)
-    return return_values[1];
-  else if(v[2]==3)
+  if(v[2]==9 || (v[2]==10 && v[3]<1))
+    if(v[4]==FW_REGION_USA)
+      return return_values[0];
+    else
+      return return_values[1];
+  else if(v[4]==FW_REGION_USA)
     return return_values[2];
-  else if(v[2]==4)
-    return return_values[3];
-  else if(v[2]==5)
-    return return_values[4];
-  else if(v[2]==6)
-    return return_values[5];
-  else if(v[2]==7)
-    return return_values[6];
-  else if(v[2]==9 && v[4]==FW_REGION_USA)
-    return return_values[7];
-  else if(v[2]==10 && v[4]==FW_REGION_USA)
-    return return_values[7];
-  else return return_values[8];
+  else return return_values[3];
 }
 
 static char* getMsetVersion(int v[])
 {
-  static char* return_values[] = {"8203", "9221"};
-  if (v[2] < 6)
-    return return_values[0];
-  else
-    return return_values[1];
+  static char* return_values[] = {"9221"};
+  return return_values[0];
 }
 
 static char* getRegion(int v[])
