@@ -289,7 +289,7 @@ int main() {
           //Download Payload
           httpcContext context;
           static char url[512]; //Build URL for Payload
-          sprintf(url, "http://smealum.github.io/ninjhax2/Pvl9iD2Im5/otherapp/%s.bin", payload_name);
+          sprintf(url, "http://smealum.github.io/ninjhax2/JL1Xf2KFVm/otherapp/%s.bin", payload_name);
 
           sprintf(status, "Downloading payload %s", payload_name);
           Result ret = httpcOpenContext(&context, url, 0);
