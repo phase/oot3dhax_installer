@@ -69,6 +69,31 @@ typedef enum {
   STATE_ERROR,
 }state_t;
 
+// sorry smea but I have no idea how to merge things properly so
+Result http_getredirection(char *url, char *out, u32 out_size)
+{
+    Result ret=0;
+    httpcContext context;
+
+    ret = httpcOpenContext(&context, url, 0);
+    if(ret!=0)return ret;
+
+
+    ret = httpcAddRequestHeaderField(&context, "User-Agent", "ironhax");
+    if(!ret) ret = httpcBeginRequest(&context);
+    if(ret!=0)
+    {
+        httpcCloseContext(&context);
+        return ret;
+    }
+
+    ret = httpcGetResponseHeader(&context, "Location", out, out_size);
+
+    httpcCloseContext(&context);
+
+    return 0;
+}
+
 Result http_download(httpcContext *context, u8** out_buf, u32* out_size) {
   Result ret=0;
   u32 statuscode=0;
@@ -164,15 +189,9 @@ int main() {
   int firmware_version[firmware_length] = {0, 0, 9, 0, 0};
   int firmware_selected_value = 0;
   
-  static char payload_name[256];
   u8* payload_buf = NULL;
   u32 payload_size = 0;
 
-  //int contains_useable_local_payload = 0;
-  const char *local_payloads[NUM_LOCAL_PAYLOADS];
-  local_payloads[0] = "POST5_U_20480_usa_9221";
-  local_payloads[1] = "N3DS_U_20480_usa_9221";
-  
   while (aptMainLoop())
   {
     hidScanInput();
@@ -193,8 +212,7 @@ int main() {
           strcat(top_text, "\n\n\n Please select your console's firmware version.\nOnly select NEW 3DS if you own a New 3DS (XL).\nD-Pad to select, A to continue.\n");
           break;
         case STATE_DOWNLOAD_PAYLOAD:
-          getPayloadName(firmware_version, payload_name);
-          sprintf(top_text, "%s\n\n\n Retrieving payload... %s\n", top_text, payload_name);
+          sprintf(top_text, "%s\n\n\n Retrieving payload...\n", top_text);
           break;
         case STATE_INSTALL_PAYLOAD:
           strcat(top_text, " Installing payload...\n");
@@ -252,7 +270,7 @@ int main() {
           
           if(hidKeysDown() & KEY_A)next_state = STATE_DOWNLOAD_PAYLOAD;
 
-          int offset = 28 + firmware_format_offsets[firmware_selected_value];
+          int offset = 27 + firmware_format_offsets[firmware_selected_value];
           printf((firmware_version[firmware_selected_value] < firmware_num_values[firmware_selected_value] - 1) ? "%*s^%*s" : "%*s-%*s", offset, " ", 50 - offset - 1, " ");
           printf("        Selected firmware: " "%s %s-%s-%s %s" "\n", firmware_labels[0][firmware_version[0]], firmware_labels[1][firmware_version[1]], firmware_labels[2][firmware_version[2]], firmware_labels[3][firmware_version[3]], firmware_labels[4][firmware_version[4]]);
           printf((firmware_version[firmware_selected_value] > 0) ? "%*sv%*s" : "%*s-%*s", offset, " ", 50 - offset - 1, " ");
@@ -260,41 +278,25 @@ int main() {
         break;
       case STATE_DOWNLOAD_PAYLOAD:
         {
-          int i = 0;
           consoleSelect(&topConsole);
           memset(&top_text, 0, sizeof(top_text));
           top_text[0] = '\0';
-          strcpy(top_text, "Searching through local payloads...\n");
-          printf(top_text);
-          /*while(i<NUM_LOCAL_PAYLOADS) { //Go through all the local payloads
-            if (strcmp(local_payloads[i], payload_name) != 0) { //If the payload we need is on the SD card
-              //contains_useable_local_payload = 1;
-              sprintf(status, "Found local payload %s", payload_name);
-              char payload_location[64]; //Build payload location string (needs to be around 60 characters)
-              stpcpy(payload_location, "3ds/oot3dhax_installer/");
-              strcat(payload_location, payload_name);
-              strcat(payload_location, ".bin");
-              
-              FILE *file = fopen(payload_location, "rb"); //Open specific payload
-              fseek(file,0,SEEK_END); //Go to end of file
-              payload_size = ftell(file); //Get payload size
-              fseek(file,0,SEEK_SET); //Go back up
-              
-              payload_buf = malloc(payload_size); //Prepare payload buffer size
-              fread(payload_buf, 1 , payload_size, file); //Get payload contents
-              fclose(file); //Close file
-              
-              goto payload_finish; //Skip download because we found it locally
-            }
-            i++;
-          }*/
           //Download Payload
           httpcContext context;
+          static char in_url[512];
           static char url[512]; //Build URL for Payload
-          sprintf(url, "http://smealum.github.io/ninjhax2/JL1Xf2KFVm/otherapp/%s.bin", payload_name);
+          sprintf(in_url, "http://smea.mtheall.com/get_payload.php?version=%s-%s-%s-%s-0-%s", firmware_labels_url[0][firmware_version[0]], firmware_labels_url[1][firmware_version[1]], firmware_labels_url[2][firmware_version[2]], firmware_labels_url[3][firmware_version[3]], firmware_labels_url[4][firmware_version[4]]);
+      
+          ret = http_getredirection(in_url, url, 512);
+          if(ret)
+          {
+              sprintf(status, "Failed to grab payload url\n    Error code : %08X", (unsigned int)ret);
+              next_state = STATE_ERROR;
+              break;
+          }
 
-          sprintf(status, "Downloading payload %s", payload_name);
-          Result ret = httpcOpenContext(&context, url, 0);
+          sprintf(status, "Downloading payload\n    URL: %s", url);
+          ret = httpcOpenContext(&context, url, 0);
           if(ret) {
             sprintf(status, "Failed to open http context\n    Error code: %08X", (unsigned int)ret);
             next_state = STATE_ERROR;
@@ -307,7 +309,6 @@ int main() {
             next_state = STATE_ERROR;
             break;
           }
-          payload_finish:
           next_state = STATE_INSTALL_PAYLOAD;
         }
         break;
