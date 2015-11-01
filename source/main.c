@@ -6,6 +6,8 @@
 #include "filesystem.h"
 #include "firmware.h"
 
+#define NUM_LOCAL_PAYLOADS 2
+
 char status[256];
 
 Result FSUSER_ControlArchive(Handle handle, FS_archive archive) {
@@ -166,8 +168,8 @@ int main() {
   u8* payload_buf = NULL;
   u32 payload_size = 0;
 
-  int contains_useable_local_payload = 0;
-  const char *local_payloads[2];
+  //int contains_useable_local_payload = 0;
+  const char *local_payloads[NUM_LOCAL_PAYLOADS];
   local_payloads[0] = "POST5_U_20480_usa_9221";
   local_payloads[1] = "N3DS_U_20480_usa_9221";
   
@@ -264,9 +266,9 @@ int main() {
           top_text[0] = '\0';
           strcpy(top_text, "Searching through local payloads...\n");
           printf(top_text);
-          while(local_payloads[i]) { //Go through all the local payloads
+          /*while(i<NUM_LOCAL_PAYLOADS) { //Go through all the local payloads
             if (strcmp(local_payloads[i], payload_name) != 0) { //If the payload we need is on the SD card
-              contains_useable_local_payload = 1;
+              //contains_useable_local_payload = 1;
               sprintf(status, "Found local payload %s", payload_name);
               char payload_location[64]; //Build payload location string (needs to be around 60 characters)
               stpcpy(payload_location, "3ds/oot3dhax_installer/");
@@ -285,7 +287,7 @@ int main() {
               goto payload_finish; //Skip download because we found it locally
             }
             i++;
-          }
+          }*/
           //Download Payload
           httpcContext context;
           static char url[512]; //Build URL for Payload
@@ -344,7 +346,7 @@ int main() {
     }
 
     consoleSelect(&bttmConsole);
-    printf("\x1b[0;0H  \n Found a bug? Go to\n    https://github.com/\n               phase/oot3dhax_installer/ \n\n  Current status:\n    %s\n", status);
+    printf("\x1b[0;0H  \n Found a bug? Go to\n    https://github.com/\n       phase/oot3dhax_installer/ \n\n  Current status:\n    %s\n", status);
 
     gspWaitForVBlank();
   }
