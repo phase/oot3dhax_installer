@@ -231,7 +231,7 @@ int main() {
 
     consoleSelect(&topConsole);
     printf("\x1b[0;%dHoot3dhax installer", (50 - 17) / 2);
-    printf("\x1b[1;%dHby smea, yellows8, phase, and meladroit\n\n\n", (50 - 38) / 2);
+    printf("\x1b[1;%dHby meladroit, phase, yellows8, and smea\n\n\n", (50 - 38) / 2);
     printf(top_text);
 
     // state function
