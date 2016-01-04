@@ -6,8 +6,6 @@
 #include "filesystem.h"
 #include "firmware.h"
 
-#define NUM_LOCAL_PAYLOADS 2
-
 char status[256];
 
 Result FSUSER_ControlArchive(Handle handle, FS_archive archive) {
