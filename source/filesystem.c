@@ -1,48 +1,29 @@
 #include <string.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 #include <3ds.h>
 
 #include "filesystem.h"
 
-Handle saveGameFsHandle, sdmcFsHandle;
-FS_archive saveGameArchive, sdmcArchive;
-
-// bypass handle list
-Result _srvGetServiceHandle(Handle* out, const char* name)
-{
-  Result rc = 0;
-
-  u32* cmdbuf = getThreadCommandBuffer();
-  cmdbuf[0] = 0x50100;
-  strcpy((char*) &cmdbuf[1], name);
-  cmdbuf[3] = strlen(name);
-  cmdbuf[4] = 0x0;
-  
-  if((rc = svcSendSyncRequest(*srvGetSessionHandle())))return rc;
-
-  *out = cmdbuf[3];
-  return cmdbuf[1];
-}
+FS_Archive saveGameArchive, sdmcArchive;
+static Handle fsHandle;
 
 Result filesystemInit()
 {
   Result ret;
+ 
+  fsInit(); 
+  if (R_FAILED(ret = srvGetServiceHandleDirect(&fsHandle, "fs:USER"))) return ret;
+  if (R_FAILED(ret = FSUSER_Initialize(fsHandle))) return ret;
   
-  ret = _srvGetServiceHandle(&saveGameFsHandle, "fs:USER");
-  if(ret)return ret;
-  
-  ret = FSUSER_Initialize(&saveGameFsHandle);
-  if(ret)return ret;
+  fsUseSession(fsHandle, false);
 
-  ret = srvGetServiceHandle(&sdmcFsHandle, "fs:USER");
-  if(ret)return ret;
+  sdmcArchive = (FS_Archive){ARCHIVE_SDMC, (FS_Path){PATH_EMPTY, 1, (u8*)""}, 0};
+  if (R_FAILED(ret = FSUSER_OpenArchive(&sdmcArchive))) return ret;
 
-  saveGameArchive = (FS_archive){0x00000004, (FS_path){PATH_EMPTY, 1, (u8*)""}};
-  ret = FSUSER_OpenArchive(&saveGameFsHandle, &saveGameArchive);
-
-  sdmcArchive = (FS_archive){0x00000009, (FS_path){PATH_EMPTY, 1, (u8*)""}};
-  ret = FSUSER_OpenArchive(&sdmcFsHandle, &sdmcArchive);
+  saveGameArchive = (FS_Archive){ARCHIVE_SAVEDATA, (FS_Path){PATH_EMPTY, 1, (u8*)""}, 0};
+  if (R_FAILED(ret = FSUSER_OpenArchive(&saveGameArchive))) return ret;
 
   return ret;
 }
@@ -51,10 +32,11 @@ Result filesystemExit()
 {
   Result ret;
   
-  ret = FSUSER_CloseArchive(&saveGameFsHandle, &saveGameArchive);
-  ret = FSUSER_CloseArchive(&sdmcFsHandle, &sdmcArchive);
-  ret = svcCloseHandle(saveGameFsHandle);
-  ret = svcCloseHandle(sdmcFsHandle);
+  ret = FSUSER_CloseArchive(&saveGameArchive);
+  ret |= FSUSER_CloseArchive(&sdmcArchive);
+
+  fsEndUseSession();
+  fsExit();
 
   return ret;
 }

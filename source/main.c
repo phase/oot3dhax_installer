@@ -8,28 +8,6 @@
 
 char status[256];
 
-Result FSUSER_ControlArchive(Handle handle, FS_archive archive) {
-  u32* cmdbuf=getThreadCommandBuffer();
-
-  u32 b1 = 0, b2 = 0;
-
-  cmdbuf[0]=0x080d0144;
-  cmdbuf[1]=archive.handleLow;
-  cmdbuf[2]=archive.handleHigh;
-  cmdbuf[3]=0x0;
-  cmdbuf[4]=0x1; //buffer1 size
-  cmdbuf[5]=0x1; //buffer1 size
-  cmdbuf[6]=0x1a;
-  cmdbuf[7]=(u32)&b1;
-  cmdbuf[8]=0x1c;
-  cmdbuf[9]=(u32)&b2;
- 
-  Result ret=0;
-  if((ret=svcSendSyncRequest(handle)))return ret;
- 
-  return cmdbuf[1];
-}
-
 Result write_savedata(char* path, u8* data, u32 size) {
   if(!path || !data || !size)return -1;
 
@@ -38,16 +16,16 @@ Result write_savedata(char* path, u8* data, u32 size) {
   Result ret = 0;
   int fail = 0;
 
-  ret = FSUSER_OpenFile(&saveGameFsHandle, &outFileHandle, saveGameArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_CREATE | FS_OPEN_WRITE, FS_ATTRIBUTE_NONE);
-  if(ret){fail = -8; goto writeFail;}
+  ret = FSUSER_OpenFile(&outFileHandle, saveGameArchive, fsMakePath(PATH_ASCII, path), FS_OPEN_CREATE | FS_OPEN_WRITE, 0);
+  if(R_FAILED(ret)){fail = -8; goto writeFail;}
 
   ret = FSFILE_Write(outFileHandle, &bytesWritten, 0x0, data, size, 0x10001);
-  if(ret){fail = -9; goto writeFail;}
+  if(R_FAILED(ret)){fail = -9; goto writeFail;}
 
   ret = FSFILE_Close(outFileHandle);
-  if(ret){fail = -10; goto writeFail;}
+  if(R_FAILED(ret)){fail = -10; goto writeFail;}
 
-  ret = FSUSER_ControlArchive(saveGameFsHandle, saveGameArchive);
+  ret = FSUSER_ControlArchive(saveGameArchive, ARCHIVE_ACTION_COMMIT_SAVE_DATA, NULL, 0, NULL, 0);
 
   writeFail:
   if(fail)sprintf(status, "Failed to write to file: %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
