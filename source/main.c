@@ -17,16 +17,15 @@ Result write_savedata(char* path, u8* data, u32 size) {
   int fail = 0;
 
   ret = FSUSER_OpenFile(&outFileHandle, saveGameArchive, fsMakePath(PATH_ASCII, path), FS_OPEN_CREATE | FS_OPEN_WRITE, 0);
-  if(ret){fail = -8; goto writeFail;}
+  if(R_FAILED(ret)){fail = -8; goto writeFail;}
 
   ret = FSFILE_Write(outFileHandle, &bytesWritten, 0x0, data, size, 0x10001);
-  if(ret){fail = -9; goto writeFail;}
+  if(R_FAILED(ret)){fail = -9; goto writeFail;}
 
   ret = FSFILE_Close(outFileHandle);
-  if(ret){fail = -10; goto writeFail;}
+  if(R_FAILED(ret)){fail = -10; goto writeFail;}
 
-  u32 b1 = 0, b2 = 0;
-  ret = FSUSER_ControlArchive(saveGameArchive, ARCHIVE_ACTION_COMMIT_SAVE_DATA, &b1, 1, &b2, 1);
+  ret = FSUSER_ControlArchive(saveGameArchive, ARCHIVE_ACTION_COMMIT_SAVE_DATA, NULL, 0, NULL, 0);
 
   writeFail:
   if(fail)sprintf(status, "Failed to write to file: %d\n     %08X %08X", fail, (unsigned int)ret, (unsigned int)bytesWritten);
